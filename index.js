@@ -6,7 +6,8 @@ var objectAssign = require('object-assign');
 module.exports = function (options) {
     options = objectAssign({}, {
         ignore: [],
-        prefix: ''
+        prefix: '',
+        includeIds: false
     }, options);
 
     if (typeof options.ignore == 'string') {
@@ -16,8 +17,20 @@ module.exports = function (options) {
     return function posthtmlPrefixClass(tree) {
         return tree.walk(function (node) {
             var attrs = node.attrs || false;
-            var classNames = attrs.class && attrs.class.trim().split(/\s+/g);
 
+            var id = attrs.id && attrs.id.trim();
+            if (id) {
+                node.attrs.id = id;
+                var shouldIdBeIgnored = !options.includeIds || options.ignore.some(function (pattern) {
+                    return minimatch(id, pattern);
+                });
+
+                if (!shouldIdBeIgnored) {
+                    node.attrs.id = options.prefix + id
+                }
+            }
+
+            var classNames = attrs.class && attrs.class.trim().split(/\s+/g);
             if (!classNames) {
                 return node;
             }
