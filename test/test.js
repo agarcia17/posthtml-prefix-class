@@ -5,12 +5,13 @@ var posthtml = require('posthtml');
 var posthtmlPrefixClass = require('../index.js');
 
 var input = {
-    single: '<div class="selector-1 selector-2"></div>',
-    leading: '<div class=" selector-1 selector-2"></div>',
-    trailing: '<div class="selector-1 selector-2 "></div>',
-    double: '<div class="selector-1  selector-2"></div>',
+    single: '<div id="selector-3" class="selector-1 selector-2"></div>',
+    leading: '<div id=" selector-3" class=" selector-1 selector-2"></div>',
+    trailing: '<div id="selector-3 " class="selector-1 selector-2 "></div>',
+    double: '<div id="selector-3  " class="selector-1  selector-2"></div>',
     newline: (
-        '<div class="selector-1\
+        '<div id="selector-3"\
+        class="selector-1\
         selector-2"></div>'
     ),
 };
@@ -18,41 +19,41 @@ var input = {
 describe('posthtml-prefix-class', function () {
 
     describe('posthtmlPrefixClass()', function () {
-        expect('<div class="selector-1 selector-2"></div>');
+        expect('<div id="selector-3" class="selector-1 selector-2"></div>');
     });
 
     describe('posthtmlPrefixClass({ prefix: String })', function () {
         expect(
-            '<div class="prefix-selector-1 prefix-selector-2"></div>',
-            { prefix: 'prefix-' }
+            '<div id="prefix-selector-3" class="prefix-selector-1 prefix-selector-2"></div>',
+            { prefix: 'prefix-', includeIds: true }
         );
     });
 
     describe('posthtmlPrefixClass({ prefix: String, ignore: String })', function () {
         expect(
-            '<div class="prefix-selector-1 selector-2"></div>',
-            { prefix: 'prefix-', ignore: 'selector-2' }
+            '<div id="prefix-selector-3" class="prefix-selector-1 selector-2"></div>',
+            { prefix: 'prefix-', ignore: 'selector-2', includeIds: true }
         );
     });
 
     describe('posthtmlPrefixClass({ prefix: String, ignore: *String })', function () {
         expect(
-            '<div class="prefix-selector-1 selector-2"></div>',
-            { prefix: 'prefix-', ignore: '*-2' }
+            '<div id="selector-3" class="prefix-selector-1 selector-2"></div>',
+            { prefix: 'prefix-', ignore: '*-2', includeIds: false }
         );
     });
 
     describe('posthtmlPrefixClass({ prefix: String, ignore: Array })', function () {
         expect(
-            '<div class="selector-1 selector-2"></div>',
-            { prefix: 'prefix-', ignore: ['selector-1', 'selector-2'] }
+            '<div id="selector-3" class="selector-1 selector-2"></div>',
+            { prefix: 'prefix-', ignore: ['selector-1', 'selector-2', 'selector-3'], includeIds: true }
         );
     });
 
     describe('posthtmlPrefixClass({ prefix: String, ignore: *Array })', function () {
         expect(
-            '<div class="selector-1 selector-2"></div>',
-            { prefix: 'prefix-', ignore: ['*-1', '*-2'] }
+            '<div id="selector-3" class="selector-1 selector-2"></div>',
+            { prefix: 'prefix-', ignore: ['*-1', '*-2', '*-3'], includeIds: true }
         );
     });
 });
